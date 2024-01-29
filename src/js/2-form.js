@@ -1,32 +1,27 @@
-const STORAGE_KEY = 'user-data';
+const textArea = document.querySelector('textarea');
+textArea.addEventListener('focus', onTextFocus);
+function onTextFocus() {
+  textArea.setAttribute('placeholder', 'Type area');
+}
+
+textArea.addEventListener('blur', onTextBlur);
+function onTextBlur() {
+  textArea.removeAttribute('placeholder');
+}
+
+const STORAGE_KEY = 'feedback-form-state';
 
 const form = document.querySelector('.feedback-form');
 
 form.addEventListener('input', onFormInput);
 form.addEventListener('submit', onFormSubmit);
 
-function onFormSubmit(e) {
-  e.preventDefault();
-
-  const name = form.elements.name.value;
-  const message = form.elements.message.value;
-
-  const data = {
-    name,
-    message,
-  };
-
-  console.log(data);
-
-  localStorage.removeItem(STORAGE_KEY);
-  form.reset();
-}
 function onFormInput() {
-  const name = form.elements.name.value;
+  const email = form.elements.email.value;
   const message = form.elements.message.value;
 
   const data = {
-    name,
+    email,
     message,
   };
 
@@ -47,9 +42,24 @@ function loadFromLS(key) {
   }
 }
 
+function onFormSubmit(e) {
+  e.preventDefault();
+
+  const email = form.elements.email.value;
+  const message = form.elements.message.value;
+
+  const data = {
+    email,
+    message,
+  };
+  console.log(data);
+  localStorage.removeItem(STORAGE_KEY);
+  form.reset();
+}
+
 function init() {
   const data = loadFromLS(STORAGE_KEY) || {};
-  form.elements.name.value = data.name || 'Anonym';
+  form.elements.email.value = data.email || '';
   form.elements.message.value = data.message || '';
 }
 
